@@ -1,1 +1,40 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg: #111113;
+    --ink: #f8f7f4;
+    --accent: #FFD700;
+    --secondary: #008000;
+    --panel: #18181a;
+    --border: rgba(248, 247, 244, 0.1);
+  }
+}
+
+.font-oswald {
+  font-family: 'Oswald', sans-serif;
+}
+
+.font-geist-mono {
+  font-family: 'Geist Mono', monospace;
+}
+
+.font-inter {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #111113;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(248, 247, 244, 0.15);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 215, 0, 0.35);
+}

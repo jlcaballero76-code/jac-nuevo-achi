@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Header } from './components/Header';
+import { AppLayout, SectionId } from './components/AppLayout';
 import { HeroBanner } from './components/HeroBanner';
 import { InstitutionalSection } from './components/InstitutionalSection';
 import { ActionPlanSection } from './components/ActionPlanSection';
@@ -8,7 +8,6 @@ import { AffiliateRegistrationForm } from './components/AffiliateRegistrationFor
 import { DocumentsAndStatutesSection } from './components/DocumentsAndStatutesSection';
 import { HistorySection } from './components/HistorySection';
 import { LocationSection } from './components/LocationSection';
-import { Footer } from './components/Footer';
 import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 import { DocumentViewerModal } from './components/DocumentViewerModal';
 import { ColombiaSolarModal } from './components/ColombiaSolarModal';
@@ -16,6 +15,7 @@ import { OFFICIAL_DOCUMENTS } from './data/jacData';
 import { OfficialDocumentItem } from './types';
 
 export default function App() {
+  const [activeSection, setActiveSection] = useState<SectionId>('inicio');
   const [activeDocModal, setActiveDocModal] = useState<OfficialDocumentItem | null>(null);
   const [isSolarModalOpen, setIsSolarModalOpen] = useState<boolean>(false);
 
@@ -26,7 +26,8 @@ export default function App() {
     }
   };
 
-  const handleScrollToSection = (sectionId: string) => {
+  const handleScrollToSection = (sectionId: SectionId) => {
+    setActiveSection(sectionId);
     const el = document.getElementById(sectionId);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
@@ -34,69 +35,64 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#f4f7f6] text-[#2c3e50] font-sans antialiased selection:bg-amber-300 selection:text-slate-900">
-      
-      {/* Sticky Official Header & Navigation */}
-      <Header
-        onOpenRegister={() => handleScrollToSection('beneficiarios')}
-        onOpenSolar={() => setIsSolarModalOpen(true)}
-      />
-
-      {/* Hero Banner with Community Indicators */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-10 sm:space-y-12">
+    <AppLayout
+      activeSection={activeSection}
+      onSelectSection={handleScrollToSection}
+      onOpenSolarModal={() => setIsSolarModalOpen(true)}
+      onOpenDocModal={handleOpenDocById}
+    >
+      <div className="w-full">
         
-        {/* Hero Section */}
+        {/* 1. Hero Banner with Variation 3 Header, Brutalist Data Grid & Photo Spotlight */}
         <HeroBanner
           onOpenRegister={() => handleScrollToSection('beneficiarios')}
           onOpenSolar={() => setIsSolarModalOpen(true)}
+          onOpenDoc={handleOpenDocById}
         />
 
-        {/* 1. Información Institucional & Órganos Directivos */}
+        {/* 2. Información Institucional & Legal */}
         <InstitutionalSection
           onOpenRegister={() => handleScrollToSection('beneficiarios')}
         />
 
-        {/* 2. Plan de Acción Cuatrienal (Proyectos a Gestionar) */}
+        {/* 3. Plan de Acción Cuatrienal 2024 - 2028 */}
         <ActionPlanSection
           onOpenSolar={() => setIsSolarModalOpen(true)}
           onOpenDoc={handleOpenDocById}
         />
 
-        {/* 3. Transición Energética & Gas Domiciliario (Informe Técnico 2026) */}
+        {/* 4. Transición Energética & Gas Domiciliario */}
         <SolarAndServicesSection
           onOpenDoc={handleOpenDocById}
           onOpenSolarModal={() => setIsSolarModalOpen(true)}
         />
 
-        {/* 4. Formulario de Actualización de Beneficiarios & Libro de Afiliados */}
+        {/* 5. Carga de Datos / Formulario de Afiliación & Libro Digital */}
         <AffiliateRegistrationForm />
 
-        {/* 5. Documentos Oficiales & Visor de Estatutos (132 Artículos) */}
+        {/* 6. Expedientes Oficiales & Visor de Estatutos (132 Artículos) */}
         <DocumentsAndStatutesSection
           onOpenDocModal={(doc) => setActiveDocModal(doc)}
         />
 
-        {/* 6. Reseña Histórica de Achí & Origen de Nuevo Achí */}
+        {/* 7. Reseña Histórica & Cronista de Achí */}
         <HistorySection />
 
-        {/* 7. Ubicación Geográfica & Coordenadas */}
+        {/* 8. Ubicación Geográfica & Coordenadas */}
         <LocationSection />
 
-      </main>
+      </div>
 
-      {/* Official Footer */}
-      <Footer />
-
-      {/* Floating WhatsApp Action Button */}
+      {/* Floating WhatsApp Quick Action Button */}
       <FloatingWhatsApp />
 
-      {/* Modal for viewing and printing documents */}
+      {/* Modal for viewing and downloading authentic documents */}
       <DocumentViewerModal
         document={activeDocModal}
         onClose={() => setActiveDocModal(null)}
       />
 
-      {/* Modal for Colombia Solar Program guidelines */}
+      {/* Modal for Colombia Solar Program guidelines & eligibility */}
       <ColombiaSolarModal
         isOpen={isSolarModalOpen}
         onClose={() => setIsSolarModalOpen(false)}
@@ -105,7 +101,6 @@ export default function App() {
           handleScrollToSection('beneficiarios');
         }}
       />
-
-    </div>
+    </AppLayout>
   );
 }

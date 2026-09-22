@@ -1,5 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { UserCheck, CheckCircle2, FileDown, Printer, Users, Search, Download, AlertCircle, ShieldCheck, QrCode, RefreshCw } from 'lucide-react';
+import { 
+  UserCheck, 
+  CheckCircle2, 
+  FileDown, 
+  Printer, 
+  Users, 
+  Search, 
+  Download, 
+  AlertCircle, 
+  ShieldCheck, 
+  QrCode, 
+  RefreshCw 
+} from 'lucide-react';
 import { AffiliateRegistration } from '../types';
 import { INSTITUTIONAL_INFO } from '../data/jacData';
 
@@ -58,117 +70,114 @@ const INITIAL_DEMO_RECORDS: AffiliateRegistration[] = [
     workCommission: "Obras y Servicios Publicos",
     familyMembersCount: 4,
     isConflictVictim: false,
-    populationGroup: "Campesino / Productor",
-    registrationDate: "2023-09-06",
+    populationGroup: "Comunidad General",
+    registrationDate: "2023-09-10",
     verificationCode: "JAC-NA-1088038-2023"
+  },
+  {
+    id: "REG-005",
+    fullName: "Luz Dary Cardona Meza",
+    documentType: "CC",
+    documentNumber: "45567891",
+    phone: "3201234567",
+    address: "Manzana 03 Bloque 02 Casa 07",
+    workCommission: "Juventud",
+    familyMembersCount: 3,
+    isConflictVictim: true,
+    populationGroup: "Víctima Ley 1448",
+    registrationDate: "2023-10-15",
+    verificationCode: "JAC-NA-4556789-2023"
   }
 ];
 
 export const AffiliateRegistrationForm: React.FC = () => {
-  const [registrations, setRegistrations] = useState<AffiliateRegistration[]>([]);
-  const [submittedCert, setSubmittedCert] = useState<AffiliateRegistration | null>(null);
-  const [showAdminList, setShowAdminList] = useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [commissionFilter, setCommissionFilter] = useState<string>('Todas');
+  const [registrations, setRegistrations] = useState<AffiliateRegistration[]>(() => {
+    const saved = localStorage.getItem('jac_nuevo_achi_affiliates_v2');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        return INITIAL_DEMO_RECORDS;
+      }
+    }
+    return INITIAL_DEMO_RECORDS;
+  });
 
-  // Form states
   const [fullName, setFullName] = useState('');
-  const [documentType, setDocumentType] = useState<'CC' | 'TI' | 'CE' | 'OTRO'>('CC');
+  const [documentType, setDocumentType] = useState<'CC' | 'TI' | 'CE'>('CC');
   const [documentNumber, setDocumentNumber] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [workCommission, setWorkCommission] = useState('');
-  const [familyMembersCount, setFamilyMembersCount] = useState('4');
-  const [isConflictVictim, setIsConflictVictim] = useState(false);
-  const [acceptTerms, setAcceptTerms] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successToast, setSuccessToast] = useState(false);
+  const [familyMembersCount, setFamilyMembersCount] = useState<number>(4);
+  const [isConflictVictim, setIsConflictVictim] = useState<boolean>(true);
+  const [acceptTerms, setAcceptTerms] = useState<boolean>(true);
 
-  // Load from localStorage on mount
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [submittedCert, setSubmittedCert] = useState<AffiliateRegistration | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [commissionFilter, setCommissionFilter] = useState('Todas');
+  const [showAdminList, setShowAdminList] = useState(false);
+
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem('jac_nuevo_achi_affiliates');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setRegistrations(parsed);
-          return;
-        }
-      }
-      // If empty, initialize with official demo records
-      setRegistrations(INITIAL_DEMO_RECORDS);
-      localStorage.setItem('jac_nuevo_achi_affiliates', JSON.stringify(INITIAL_DEMO_RECORDS));
-    } catch {
-      setRegistrations(INITIAL_DEMO_RECORDS);
-    }
-  }, []);
+    localStorage.setItem('jac_nuevo_achi_affiliates_v2', JSON.stringify(registrations));
+  }, [registrations]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!acceptTerms) {
-      alert('Por favor acepte la declaración estatutaria para continuar.');
+    if (!fullName || !documentNumber || !phone || !address || !workCommission) {
+      alert("Por favor diligencie todos los campos obligatorios (*).");
       return;
     }
 
     setIsSubmitting(true);
 
-    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-    const code = `JAC-NA-${documentNumber.slice(-4) || 'AFIL'}-${randomSuffix}`;
+    const now = new Date();
+    const dateStr = now.toISOString().split('T')[0];
+    const cleanDoc = documentNumber.replace(/\D/g, '');
+    const verifCode = `JAC-NA-${cleanDoc.slice(-7)}-${now.getFullYear()}`;
+
     const newRecord: AffiliateRegistration = {
-      id: `REG-${Date.now().toString().slice(-6)}`,
+      id: `REG-${String(registrations.length + 1).padStart(3, '0')}`,
       fullName: fullName.trim(),
       documentType,
-      documentNumber: documentNumber.trim(),
+      documentNumber: cleanDoc,
       phone: phone.trim(),
       email: email.trim() || undefined,
       address: address.trim(),
       workCommission,
-      familyMembersCount: parseInt(familyMembersCount) || 1,
+      familyMembersCount: Number(familyMembersCount) || 1,
       isConflictVictim,
-      populationGroup: isConflictVictim ? "Víctima Ley 1448" : "Comunidad General",
-      registrationDate: new Date().toISOString().split('T')[0],
-      verificationCode: code
+      populationGroup: isConflictVictim ? "Víctima Ley 1448 / Protección Constitucional" : "Residente General",
+      registrationDate: dateStr,
+      verificationCode: verifCode
     };
 
     setTimeout(() => {
-      const updated = [newRecord, ...registrations];
-      setRegistrations(updated);
-      try {
-        localStorage.setItem('jac_nuevo_achi_affiliates', JSON.stringify(updated));
-      } catch (err) {
-        console.error("Storage error", err);
-      }
-
+      setRegistrations(prev => [newRecord, ...prev]);
       setSubmittedCert(newRecord);
-      setSuccessToast(true);
       setIsSubmitting(false);
 
-      // Reset fields
+      // Reset form fields
       setFullName('');
       setDocumentNumber('');
       setPhone('');
       setEmail('');
       setAddress('');
       setWorkCommission('');
-      setIsConflictVictim(false);
-      setAcceptTerms(false);
     }, 600);
   };
 
-  const handlePrintCertificate = () => {
-    window.print();
-  };
-
   const handleExportCSV = () => {
-    const headers = ["ID", "Nombre Completo", "Tipo Doc", "Documento", "Telefono", "Email", "Direccion", "Comision", "Personas Hogar", "Victima Conflicto", "Fecha Registro", "Codigo Verificacion"];
+    const headers = ["ID", "Nombres Completos", "Tipo Doc", "Documento", "Telefono", "Correo", "Direccion", "Comision de Trabajo", "Personas Hogar", "Victima Conflicto", "Fecha Registro", "Codigo Verificacion"];
     const rows = registrations.map(r => [
       r.id,
       `"${r.fullName}"`,
       r.documentType,
-      `"${r.documentNumber}"`,
-      `"${r.phone}"`,
-      `"${r.email || ''}"`,
+      r.documentNumber,
+      r.phone,
+      r.email || '',
       `"${r.address}"`,
       `"${r.workCommission}"`,
       r.familyMembersCount,
@@ -177,14 +186,18 @@ export const AffiliateRegistrationForm: React.FC = () => {
       r.verificationCode
     ]);
 
-    const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `Libro_Afiliados_JAC_Barrio_Nuevo_Achi_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute("download", `Libro_Afiliados_JAC_Barrio_Nuevo_Achi_${new Date().toISOString().slice(0,10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handlePrintCertificate = () => {
+    window.print();
   };
 
   const filteredRegistrations = registrations.filter(r => {
@@ -196,74 +209,72 @@ export const AffiliateRegistrationForm: React.FC = () => {
   });
 
   return (
-    <section id="beneficiarios" className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200/80 scroll-mt-24">
+    <section id="beneficiarios" className="p-6 sm:p-10 border-b border-[#f8f7f4]/10 bg-[#111113] scroll-mt-6">
       
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-[#008000] pb-4 mb-6">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-green-50 text-[#008000] rounded-xl">
-            <UserCheck className="w-6 h-6" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-[#f8f7f4]/10">
+        <div>
+          <div className="font-geist-mono text-[10px] uppercase tracking-widest text-[#FFD700]">
+            SECCIÓN 05 • CARGA DE DATOS / AFILIACIÓN
           </div>
-          <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-[#003366] font-['Montserrat',sans-serif]">
-              Formulario de Actualización de Beneficiarios y Afiliados
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-500">
-              Conforme a la Ley 2166 de 2021 y Artículos 9, 10, 14 y 117 de los Estatutos Oficiales de la JAC
-            </p>
-          </div>
+          <h2 className="font-oswald text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#f8f7f4]">
+            Registro de Afiliados & Censo Territorial
+          </h2>
+          <p className="text-xs text-[#f8f7f4]/60 mt-1 font-inter">
+            Conforme a la Ley 2166 de 2021 y Artículos 9, 10, 14 y 117 de los Estatutos Oficiales de la JAC
+          </p>
         </div>
 
         <button
           onClick={() => setShowAdminList(!showAdminList)}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 self-start sm:self-auto cursor-pointer"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded bg-white/10 hover:bg-white/20 text-white text-xs font-oswald uppercase tracking-wider border border-[#f8f7f4]/20 transition-colors cursor-pointer self-start sm:self-auto"
         >
-          <Users className="w-3.5 h-3.5 text-[#003366]" />
+          <Users className="w-4 h-4 text-[#FFD700]" />
           <span>{showAdminList ? 'Ocultar Libro de Afiliados' : `Consultar Libro (${registrations.length})`}</span>
         </button>
       </div>
 
-      {/* Admin Book Viewer / Export */}
+      {/* Admin Book Table Drawer */}
       {showAdminList && (
-        <div className="bg-slate-50 border border-slate-300 rounded-xl p-5 mb-8 animate-in fade-in duration-200">
+        <div className="bg-[#18181a] border border-[#f8f7f4]/10 rounded-xl p-5 mb-8 animate-in fade-in duration-200">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
             <div>
-              <h3 className="font-bold text-sm text-[#003366] font-['Montserrat',sans-serif] flex items-center gap-2">
-                <Users className="w-4 h-4 text-emerald-600" />
-                Libro Digital de Registro de Afiliados (Vista Institucional)
+              <h3 className="font-oswald font-bold text-sm uppercase text-white flex items-center gap-2">
+                <Users className="w-4 h-4 text-[#008000]" />
+                Libro Digital de Registro de Afiliados (Custodia Secretaría General)
               </h3>
-              <p className="text-xs text-slate-500">
-                Registros custodiados por la Secretaría General de la JAC (Art. 117 Estatutos)
+              <p className="text-xs text-[#f8f7f4]/50 font-geist-mono">
+                Art. 117 Estatutos • Registros oficiales vigentes
               </p>
             </div>
             <button
               onClick={handleExportCSV}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#008000] text-white hover:bg-green-700 shadow-xs cursor-pointer self-start sm:self-auto"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded bg-[#008000] text-white hover:bg-green-700 font-oswald text-xs uppercase tracking-wider cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>Exportar Libro a Excel/CSV</span>
+              <span>Exportar Libro CSV</span>
             </button>
           </div>
 
-          {/* Search and Filters */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+          {/* Search bar inside drawer */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+              <Search className="w-4 h-4 absolute left-3 top-2.5 text-[#f8f7f4]/40" />
               <input
                 type="text"
+                placeholder="Buscar por nombre, cédula o manzana..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Buscar por nombre, documento o manzana..."
-                className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#003366]"
+                className="w-full pl-9 pr-3 py-2 bg-black/40 border border-[#f8f7f4]/15 rounded text-xs text-white placeholder-[#f8f7f4]/30 outline-none focus:border-[#FFD700]"
               />
             </div>
             <div>
               <select
                 value={commissionFilter}
                 onChange={(e) => setCommissionFilter(e.target.value)}
-                className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#003366]"
+                className="w-full px-3 py-2 bg-black/40 border border-[#f8f7f4]/15 rounded text-xs text-white outline-none focus:border-[#FFD700]"
               >
-                <option value="Todas">Todas las comisiones de trabajo</option>
+                <option value="Todas">Todas las Comisiones</option>
                 <option value="Educacion y Cultura">Educación y Cultura</option>
                 <option value="Obras y Servicios Publicos">Obras y Servicios Públicos</option>
                 <option value="Salud y Medio Ambiente">Salud y Medio Ambiente</option>
@@ -275,151 +286,141 @@ export const AffiliateRegistrationForm: React.FC = () => {
           </div>
 
           {/* Table */}
-          <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
-            <table className="w-full text-left border-collapse text-xs">
-              <thead className="bg-[#003366] text-white">
-                <tr>
-                  <th className="p-2.5 font-bold">Afiliado / Nombre</th>
-                  <th className="p-2.5 font-bold">Documento</th>
-                  <th className="p-2.5 font-bold">Dirección</th>
-                  <th className="p-2.5 font-bold">Comisión</th>
-                  <th className="p-2.5 font-bold">Teléfono</th>
-                  <th className="p-2.5 font-bold text-center">Ley 1448</th>
-                  <th className="p-2.5 font-bold text-center">Acción</th>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="border-b border-[#f8f7f4]/15 font-geist-mono text-[10px] text-[#f8f7f4]/50 uppercase">
+                  <th className="py-2 px-3">Código</th>
+                  <th className="py-2 px-3">Afiliado</th>
+                  <th className="py-2 px-3">Documento</th>
+                  <th className="py-2 px-3">Dirección</th>
+                  <th className="py-2 px-3">Comisión</th>
+                  <th className="py-2 px-3">Teléfono</th>
+                  <th className="py-2 px-3">Enfoque</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
-                {filteredRegistrations.length === 0 ? (
-                  <tr>
-                    <td colSpan={7} className="p-4 text-center text-slate-400">
-                      No se encontraron registros con los filtros indicados.
+              <tbody className="divide-y divide-[#f8f7f4]/10">
+                {filteredRegistrations.map((reg) => (
+                  <tr key={reg.id} className="hover:bg-white/[0.03]">
+                    <td className="py-2.5 px-3 font-geist-mono text-[#FFD700] text-[11px]">{reg.id}</td>
+                    <td className="py-2.5 px-3 font-bold text-white">{reg.fullName}</td>
+                    <td className="py-2.5 px-3 font-geist-mono text-[#f8f7f4]/70">{reg.documentType} {reg.documentNumber}</td>
+                    <td className="py-2.5 px-3 text-[#f8f7f4]/70">{reg.address}</td>
+                    <td className="py-2.5 px-3 text-[#008000]">{reg.workCommission}</td>
+                    <td className="py-2.5 px-3 font-geist-mono text-[#f8f7f4]/70">{reg.phone}</td>
+                    <td className="py-2.5 px-3">
+                      {reg.isConflictVictim ? (
+                        <span className="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300 text-[10px] font-bold">
+                          Ley 1448
+                        </span>
+                      ) : (
+                        <span className="text-[#f8f7f4]/40 text-[10px]">General</span>
+                      )}
                     </td>
                   </tr>
-                ) : (
-                  filteredRegistrations.map((reg) => (
-                    <tr key={reg.id} className="hover:bg-slate-50">
-                      <td className="p-2.5 font-semibold text-slate-800">{reg.fullName}</td>
-                      <td className="p-2.5 font-mono text-slate-600">{reg.documentType} {reg.documentNumber}</td>
-                      <td className="p-2.5 text-slate-600 truncate max-w-xs">{reg.address}</td>
-                      <td className="p-2.5">
-                        <span className="px-2 py-0.5 rounded bg-blue-50 text-[#003366] font-medium text-[10px]">
-                          {reg.workCommission}
-                        </span>
-                      </td>
-                      <td className="p-2.5 text-slate-600">{reg.phone}</td>
-                      <td className="p-2.5 text-center">
-                        {reg.isConflictVictim ? (
-                          <span className="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-bold text-[10px]">Sí</span>
-                        ) : (
-                          <span className="text-slate-400 text-[10px]">No</span>
-                        )}
-                      </td>
-                      <td className="p-2.5 text-center">
-                        <button
-                          onClick={() => setSubmittedCert(reg)}
-                          className="px-2 py-1 text-[10px] font-bold text-[#003366] bg-slate-100 hover:bg-slate-200 rounded cursor-pointer"
-                        >
-                          Ver Carnet
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
+                ))}
               </tbody>
             </table>
           </div>
         </div>
       )}
 
-      {/* Interactive Registration Form */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* Main Grid: Form Left, Digital Certificate Preview Right */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        {/* Left / Top: The Form */}
-        <div className="lg:col-span-7">
-          <p className="text-xs sm:text-sm text-slate-600 mb-6 leading-relaxed">
-            Diligencie este formulario para mantener actualizado el <strong>Libro de Afiliados</strong> de la JAC del Barrio Nuevo Achí conforme a la Ley 2166 de 2021. La inscripción es gratuita y garantiza su participación con voz y voto en las asambleas generales y su postulación a programas como <strong>Colombia Solar</strong> y subsidios de <strong>Gas Domiciliario</strong>.
-          </p>
+        {/* Left: Registration Form in Variation 3 industrial style */}
+        <div className="lg:col-span-7 bg-[#18181a] border border-[#f8f7f4]/10 rounded-xl p-6 sm:p-8">
+          <div className="font-geist-mono text-[10px] text-[#FFD700] uppercase tracking-wider mb-2 font-bold">
+            FORMULARIO OFICIAL EN LÍNEA
+          </div>
+          <h3 className="font-oswald text-xl uppercase font-bold text-white mb-6">
+            Inscripción y Actualización de Afiliados
+          </h3>
 
-          <form onSubmit={handleSubmit} className="space-y-4 text-xs sm:text-sm">
+          <form onSubmit={handleSubmit} className="space-y-4">
             
-            {/* Row 1: Nombre & Documento */}
+            {/* Full Name */}
+            <div>
+              <label className="font-geist-mono text-[10px] text-[#f8f7f4]/60 uppercase block mb-1.5">
+                Nombre Completo del Residente *
+              </label>
+              <input
+                type="text"
+                required
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Ej. Carolina Galvis Muentes"
+                className="w-full px-3.5 py-2.5 bg-black/40 border border-[#f8f7f4]/15 rounded text-xs text-white placeholder-[#f8f7f4]/30 outline-none focus:border-[#FFD700] font-inter"
+              />
+            </div>
+
+            {/* Document ID & Type */}
             <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
-              <div className="sm:col-span-7">
-                <label className="block font-bold text-slate-800 mb-1">
-                  Nombre Completo *
+              <div className="sm:col-span-4">
+                <label className="font-geist-mono text-[10px] text-[#f8f7f4]/60 uppercase block mb-1.5">
+                  Tipo Doc *
+                </label>
+                <select
+                  value={documentType}
+                  onChange={(e: any) => setDocumentType(e.target.value)}
+                  className="w-full px-3 py-2.5 bg-black/40 border border-[#f8f7f4]/15 rounded text-xs text-white outline-none focus:border-[#FFD700]"
+                >
+                  <option value="CC">C.C. Cédula</option>
+                  <option value="TI">T.I. Identidad</option>
+                  <option value="CE">C.E. Extranjería</option>
+                </select>
+              </div>
+
+              <div className="sm:col-span-8">
+                <label className="font-geist-mono text-[10px] text-[#f8f7f4]/60 uppercase block mb-1.5">
+                  Número de Documento *
                 </label>
                 <input
                   type="text"
                   required
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Ej. Juan Pérez Martínez"
-                  className="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#003366] focus:border-transparent outline-none bg-[#fdfdfd]"
+                  value={documentNumber}
+                  onChange={(e) => setDocumentNumber(e.target.value)}
+                  placeholder="Ej. 1047496383"
+                  className="w-full px-3.5 py-2.5 bg-black/40 border border-[#f8f7f4]/15 rounded text-xs text-white placeholder-[#f8f7f4]/30 outline-none focus:border-[#FFD700] font-geist-mono"
                 />
-              </div>
-
-              <div className="sm:col-span-5 grid grid-cols-5 gap-2">
-                <div className="col-span-2">
-                  <label className="block font-bold text-slate-800 mb-1">Tipo *</label>
-                  <select
-                    value={documentType}
-                    onChange={(e: any) => setDocumentType(e.target.value)}
-                    className="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none bg-[#fdfdfd]"
-                  >
-                    <option value="CC">C.C.</option>
-                    <option value="TI">T.I.</option>
-                    <option value="CE">C.E.</option>
-                  </select>
-                </div>
-                <div className="col-span-3">
-                  <label className="block font-bold text-slate-800 mb-1">Número *</label>
-                  <input
-                    type="text"
-                    required
-                    value={documentNumber}
-                    onChange={(e) => setDocumentNumber(e.target.value)}
-                    placeholder="Ej. 12345678"
-                    className="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none bg-[#fdfdfd]"
-                  />
-                </div>
               </div>
             </div>
 
-            {/* Row 2: Teléfono & Correo */}
+            {/* Phone & Email */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block font-bold text-slate-800 mb-1">
-                  Teléfono / WhatsApp *
+                <label className="font-geist-mono text-[10px] text-[#f8f7f4]/60 uppercase block mb-1.5">
+                  Contacto Móvil / WhatsApp *
                 </label>
                 <input
                   type="tel"
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  placeholder="Ej. 320 764 5119"
-                  className="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none bg-[#fdfdfd]"
+                  placeholder="Ej. +57 320 764 5119"
+                  className="w-full px-3.5 py-2.5 bg-black/40 border border-[#f8f7f4]/15 rounded text-xs text-white placeholder-[#f8f7f4]/30 outline-none focus:border-[#FFD700] font-geist-mono"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-800 mb-1">
+                <label className="font-geist-mono text-[10px] text-[#f8f7f4]/60 uppercase block mb-1.5">
                   Correo Electrónico (Opcional)
                 </label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Ej. vecino@gmail.com"
-                  className="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none bg-[#fdfdfd]"
+                  placeholder="Ej. afiliado@gmail.com"
+                  className="w-full px-3.5 py-2.5 bg-black/40 border border-[#f8f7f4]/15 rounded text-xs text-white placeholder-[#f8f7f4]/30 outline-none focus:border-[#FFD700]"
                 />
               </div>
             </div>
 
-            {/* Row 3: Dirección & Núcleo Familiar */}
+            {/* Address & Family Count */}
             <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
               <div className="sm:col-span-8">
-                <label className="block font-bold text-slate-800 mb-1">
-                  Dirección en el Barrio Nuevo Achí *
+                <label className="font-geist-mono text-[10px] text-[#f8f7f4]/60 uppercase block mb-1.5">
+                  Dirección en Barrio Nuevo Achí *
                 </label>
                 <input
                   type="text"
@@ -427,188 +428,174 @@ export const AffiliateRegistrationForm: React.FC = () => {
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="Ej. Manzana 01 Bloque 13 Casa 15"
-                  className="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none bg-[#fdfdfd]"
+                  className="w-full px-3.5 py-2.5 bg-black/40 border border-[#f8f7f4]/15 rounded text-xs text-white placeholder-[#f8f7f4]/30 outline-none focus:border-[#FFD700]"
                 />
               </div>
 
               <div className="sm:col-span-4">
-                <label className="block font-bold text-slate-800 mb-1">
-                  Personas en el Hogar
+                <label className="font-geist-mono text-[10px] text-[#f8f7f4]/60 uppercase block mb-1.5">
+                  Personas Hogar
                 </label>
                 <input
                   type="number"
                   min="1"
                   max="20"
                   value={familyMembersCount}
-                  onChange={(e) => setFamilyMembersCount(e.target.value)}
-                  className="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none bg-[#fdfdfd]"
+                  onChange={(e) => setFamilyMembersCount(Number(e.target.value))}
+                  className="w-full px-3.5 py-2.5 bg-black/40 border border-[#f8f7f4]/15 rounded text-xs text-white outline-none focus:border-[#FFD700]"
                 />
               </div>
             </div>
 
-            {/* Row 4: Comisión de Trabajo */}
+            {/* Work Commission */}
             <div>
-              <label className="block font-bold text-slate-800 mb-1">
-                Comisión de Trabajo de Interés * (Obligatorio Art. 47 Estatutos)
+              <label className="font-geist-mono text-[10px] text-[#f8f7f4]/60 uppercase block mb-1.5">
+                Comisión Estatutaria de Interés * (Art. 47 Estatutos)
               </label>
               <select
                 required
                 value={workCommission}
                 onChange={(e) => setWorkCommission(e.target.value)}
-                className="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#003366] outline-none bg-[#fdfdfd]"
+                className="w-full px-3.5 py-2.5 bg-black/40 border border-[#f8f7f4]/15 rounded text-xs text-white outline-none focus:border-[#FFD700]"
               >
-                <option value="">Seleccione una comisión de trabajo...</option>
-                <option value="Educacion y Cultura">Educación y Cultura (Formación, artes, cumbia y tambora)</option>
-                <option value="Obras y Servicios Publicos">Obras y Servicios Públicos (Agua, gas natural, infraestructura)</option>
-                <option value="Salud y Medio Ambiente">Salud y Medio Ambiente (Salud preventiva, arbolado y no quemas)</option>
-                <option value="Recreacion y Deportes">Recreación y Deportes (Polideportivo, torneos y juegos comunales)</option>
-                <option value="Juventud">Juventud (Consejo de juventudes, conectividad y liderazgo)</option>
-                <option value="Desarrollo Social">Desarrollo Social (Atención a niñez, mujer, adultos mayores)</option>
+                <option value="">Seleccione una comisión estatutaria...</option>
+                <option value="Obras y Servicios Publicos">Obras y Servicios Públicos</option>
+                <option value="Salud y Medio Ambiente">Salud y Medio Ambiente</option>
+                <option value="Juventud">Juventud</option>
+                <option value="Educacion y Cultura">Educación y Cultura</option>
+                <option value="Recreacion y Deportes">Recreación y Deportes</option>
+                <option value="Desarrollo Social">Desarrollo Social</option>
               </select>
             </div>
 
-            {/* Differential Ley 1448 Checkbox */}
-            <div className="bg-amber-50/80 p-3 rounded-lg border border-amber-200 flex items-start gap-2.5 text-xs text-amber-950">
+            {/* Conflict Victim Checkbox */}
+            <div className="p-3 rounded bg-white/[0.03] border border-white/10 flex items-start gap-3">
               <input
                 type="checkbox"
                 id="conflictVictim"
                 checked={isConflictVictim}
                 onChange={(e) => setIsConflictVictim(e.target.checked)}
-                className="w-4 h-4 text-amber-600 rounded mt-0.5 cursor-pointer"
+                className="w-4 h-4 text-[#FFD700] rounded mt-0.5 cursor-pointer accent-[#FFD700]"
               />
-              <label htmlFor="conflictVictim" className="cursor-pointer leading-tight">
-                <strong>Enfoque Diferencial:</strong> Pertenezco a población sujeta de especial protección constitucional o soy víctima del conflicto armado en el marco de la <strong>Ley 1448 de 2011</strong>.
+              <label htmlFor="conflictVictim" className="text-xs text-[#f8f7f4]/80 cursor-pointer leading-relaxed">
+                <strong className="text-[#FFD700]">Enfoque Diferencial:</strong> Pertenezco a población sujeta de especial protección constitucional o soy víctima del conflicto armado en el marco de la <strong>Ley 1448 de 2011</strong>.
               </label>
             </div>
 
-            {/* Statutory Acceptance */}
-            <div className="flex items-start gap-2.5 text-xs text-slate-600">
+            {/* Terms Checkbox */}
+            <div className="flex items-start gap-3 text-xs text-[#f8f7f4]/60">
               <input
                 type="checkbox"
                 id="terms"
                 required
                 checked={acceptTerms}
                 onChange={(e) => setAcceptTerms(e.target.checked)}
-                className="w-4 h-4 text-[#003366] rounded mt-0.5 cursor-pointer"
+                className="w-4 h-4 rounded mt-0.5 cursor-pointer accent-[#FFD700]"
               />
               <label htmlFor="terms" className="cursor-pointer leading-tight">
-                Declaro bajo juramento residir en el Barrio Nuevo Achí, ser mayor de 14 años y comprometerme a cumplir los estatutos comunales y la Ley 2166 de 2021.
+                Declaro bajo gravedad de juramento residir en el Barrio Nuevo Achí y comprometerme a cumplir los estatutos comunales y la Ley 2166 de 2021.
               </label>
             </div>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 px-6 rounded-xl font-bold text-sm bg-[#008000] text-white hover:bg-green-700 active:scale-[0.99] transition-all shadow-md cursor-pointer flex items-center justify-center gap-2"
+              className="bg-[#FFD700] hover:bg-white text-black px-6 py-3 font-oswald font-bold text-xs uppercase tracking-wider transition-all transform active:scale-95 shadow-md flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
             >
               {isSubmitting ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Registrando en Libro Oficial...</span>
+                  <span>Registrando...</span>
                 </>
               ) : (
                 <>
+                  <span>Ejecutar Registro</span>
                   <UserCheck className="w-4 h-4" />
-                  <span>Enviar Actualización y Generar Comprobante</span>
                 </>
               )}
             </button>
+
           </form>
         </div>
 
-        {/* Right: Digital Certificate / Carnet Comunal Preview */}
+        {/* Right: Digital Certificate Preview Card */}
         <div className="lg:col-span-5">
-          <div className="bg-gradient-to-b from-slate-50 to-blue-50/40 p-5 rounded-2xl border border-slate-200 shadow-sm sticky top-24">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
-              <h3 className="font-bold text-xs uppercase tracking-wider text-[#003366] font-['Montserrat',sans-serif]">
-                Comprobante Digital de Afiliación
-              </h3>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">
-                Ley 2166 de 2021
+          <div className="bg-[#18181a] border border-[#f8f7f4]/10 rounded-xl p-6 sticky top-6 space-y-4">
+            
+            <div className="flex items-center justify-between pb-3 border-b border-[#f8f7f4]/10">
+              <div className="font-geist-mono text-[10px] text-[#008000] uppercase font-bold">
+                ESTADO: CONSTANCIA OFICIAL
+              </div>
+              <span className="font-geist-mono text-[10px] text-[#f8f7f4]/50">
+                LEY 2166 / 2021
               </span>
             </div>
 
             {submittedCert ? (
-              <div className="bg-white p-4 rounded-xl border-2 border-dashed border-[#003366]/30 shadow-xs space-y-3 print:shadow-none">
-                
-                {/* Certificate Header */}
-                <div className="flex items-center gap-3 pb-2 border-b border-slate-100">
-                  <img src="/logo_jac.svg" alt="Logo JAC" className="w-12 h-12 object-contain" />
+              <div className="bg-[#111113] p-5 rounded-lg border border-[#FFD700]/40 space-y-3.5 print:bg-white print:text-black">
+                <div className="flex items-center gap-3 pb-3 border-b border-white/10">
+                  <img
+                    src="/nuevo simple.png"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (target.src !== '/logo_jac.svg') target.src = '/logo_jac.svg';
+                    }}
+                    alt="Logo"
+                    className="w-10 h-10 object-contain"
+                  />
                   <div>
-                    <h4 className="font-black text-xs text-[#003366] leading-tight font-['Montserrat',sans-serif]">
-                      JAC BARRIO NUEVO ACHÍ
+                    <h4 className="font-oswald text-sm uppercase font-bold text-white">
+                      JAC Barrio Nuevo Achí
                     </h4>
-                    <p className="text-[10px] text-slate-500">Constancia Oficial de Registro Comunal</p>
-                    <p className="text-[9px] font-mono text-emerald-700 font-bold">{submittedCert.verificationCode}</p>
+                    <p className="text-[10px] font-geist-mono text-[#FFD700]">
+                      {submittedCert.verificationCode}
+                    </p>
                   </div>
                 </div>
 
-                {/* Member Info */}
-                <div className="text-xs space-y-1.5 text-slate-700">
-                  <p><span className="text-slate-400">Afiliado:</span> <strong className="text-slate-900">{submittedCert.fullName}</strong></p>
-                  <p><span className="text-slate-400">Identificación:</span> <strong className="font-mono">{submittedCert.documentType} {submittedCert.documentNumber}</strong></p>
-                  <p><span className="text-slate-400">Dirección:</span> <span>{submittedCert.address}</span></p>
-                  <p><span className="text-slate-400">Comisión:</span> <span className="font-semibold text-[#003366]">{submittedCert.workCommission}</span></p>
-                  <p><span className="text-slate-400">Hogar:</span> <span>{submittedCert.familyMembersCount} personas</span></p>
-                  <p><span className="text-slate-400">Fecha:</span> <span>{submittedCert.registrationDate}</span></p>
-                  {submittedCert.isConflictVictim && (
-                    <div className="mt-1 p-1.5 bg-amber-50 rounded text-[10px] text-amber-900 border border-amber-200 font-medium">
-                      ✓ Priorizado bajo Enfoque Diferencial Ley 1448
-                    </div>
-                  )}
+                <div className="text-xs space-y-1.5 font-inter text-[#f8f7f4]/80">
+                  <p><span className="text-[#f8f7f4]/40 font-geist-mono text-[10px] block">AFILIADO TITULAR:</span> <strong className="text-white font-medium">{submittedCert.fullName}</strong></p>
+                  <p><span className="text-[#f8f7f4]/40 font-geist-mono text-[10px] block">DOCUMENTO:</span> <span className="font-geist-mono text-white">{submittedCert.documentType} {submittedCert.documentNumber}</span></p>
+                  <p><span className="text-[#f8f7f4]/40 font-geist-mono text-[10px] block">DIRECCIÓN:</span> <span>{submittedCert.address}</span></p>
+                  <p><span className="text-[#f8f7f4]/40 font-geist-mono text-[10px] block">COMISIÓN ASIGNADA:</span> <strong className="text-[#008000]">{submittedCert.workCommission}</strong></p>
+                  <p><span className="text-[#f8f7f4]/40 font-geist-mono text-[10px] block">FECHA DE EMISIÓN:</span> <span>{submittedCert.registrationDate}</span></p>
                 </div>
 
-                {/* Signatures Representation */}
-                <div className="pt-3 border-t border-slate-200 grid grid-cols-2 gap-2 text-center text-[9px] text-slate-500">
-                  <div>
-                    <div className="font-bold text-slate-800">Jorge Luis Caballero</div>
-                    <div className="text-[8px]">Presidente & Repr. Legal</div>
-                  </div>
-                  <div>
-                    <div className="font-bold text-slate-800">Carolina Galvis M.</div>
-                    <div className="text-[8px]">Secretaria General</div>
-                  </div>
-                </div>
-
-                <div className="flex gap-2 pt-2">
+                <div className="pt-3 border-t border-white/10 flex gap-2">
                   <button
                     onClick={handlePrintCertificate}
-                    className="flex-1 py-1.5 px-2 rounded-lg bg-[#003366] text-white text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-blue-900 transition-colors cursor-pointer"
+                    className="flex-1 py-2 rounded bg-[#FFD700] text-black font-oswald text-xs font-bold uppercase hover:bg-white transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <Printer className="w-3.5 h-3.5" />
-                    <span>Imprimir / Guardar</span>
+                    <span>Imprimir Comprobante</span>
                   </button>
                   <button
                     onClick={() => setSubmittedCert(null)}
-                    className="px-2.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200 transition-colors cursor-pointer"
+                    className="px-3 py-2 rounded bg-white/10 text-white font-oswald text-xs uppercase hover:bg-white/20 transition-colors cursor-pointer"
                   >
                     Cerrar
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="text-center py-8 px-4 text-slate-500 space-y-3">
-                <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
-                  <ShieldCheck className="w-6 h-6 text-emerald-600" />
+              <div className="py-8 text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 text-[#FFD700] flex items-center justify-center mx-auto">
+                  <ShieldCheck className="w-6 h-6" />
                 </div>
-                <h4 className="font-bold text-slate-800 text-xs font-['Montserrat',sans-serif]">
-                  Comprobante Oficial al Instante
+                <h4 className="font-oswald text-base uppercase font-bold text-white">
+                  Comprobante Inmediato
                 </h4>
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  Al completar y enviar el formulario se emitirá su credencial digital con código de verificación QR y firma comunal para postularse a subsidios de gas y energía solar.
+                <p className="text-xs text-[#f8f7f4]/60 leading-relaxed max-w-xs mx-auto font-inter">
+                  Al completar el formulario se expedirá su constancia digital con firma estatutaria y código de verificación para postularse a subsidios de gas y energía solar.
                 </p>
-                <div className="pt-2 text-[11px] text-emerald-700 font-semibold">
-                  Total afiliados vigentes en sistema: <strong>{registrations.length}</strong>
+                <div className="font-geist-mono text-[11px] text-[#008000] pt-2">
+                  Total afiliados vigentes: <strong>{registrations.length}</strong>
                 </div>
               </div>
             )}
 
-            {/* Legal Notice */}
-            <div className="mt-4 pt-3 border-t border-slate-200 text-[11px] text-slate-500 leading-normal flex items-start gap-1.5">
-              <AlertCircle className="w-3.5 h-3.5 text-slate-400 flex-shrink-0 mt-0.5" />
-              <span>
-                Los datos suministrados están amparados por la Ley 1581 de 2012 de Protección de Datos Personales y serán de uso exclusivo de la Junta de Acción Comunal.
-              </span>
+            <div className="text-[11px] font-geist-mono text-[#f8f7f4]/40 pt-2 border-t border-white/10">
+              LEY 1581 DE 2012 • PROTECCIÓN DE DATOS PERSONALES
             </div>
 
           </div>

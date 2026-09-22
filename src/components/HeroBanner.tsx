@@ -1,234 +1,248 @@
 import React from 'react';
-import { UserPlus, SunMedium, FileText, CheckCircle2, HeartHandshake, Users, ShieldCheck, Sparkles, MapPin, ArrowRight } from 'lucide-react';
+import { 
+  UserPlus, 
+  SunMedium, 
+  FileText, 
+  CheckCircle2, 
+  HeartHandshake, 
+  Users, 
+  ShieldCheck, 
+  Sparkles, 
+  MapPin, 
+  ArrowRight,
+  ExternalLink,
+  Instagram
+} from 'lucide-react';
 import { INSTITUTIONAL_INFO } from '../data/jacData';
 
 interface HeroBannerProps {
   onOpenSolar: () => void;
   onOpenRegister: () => void;
+  onOpenDoc: (docId: string) => void;
 }
 
-export const HeroBanner: React.FC<HeroBannerProps> = ({ onOpenSolar, onOpenRegister }) => {
-  const pillars = [
-    { label: "Participación Activa", icon: Users },
-    { label: "Unión Comunitaria", icon: HeartHandshake },
-    { label: "Solidaridad y Apoyo", icon: ShieldCheck },
-    { label: "Desarrollo Local", icon: Sparkles },
-    { label: "Bienestar para Todos", icon: CheckCircle2 }
-  ];
-
+export const HeroBanner: React.FC<HeroBannerProps> = ({ onOpenSolar, onOpenRegister, onOpenDoc }) => {
   return (
-    <div className="relative bg-[#003366] text-white overflow-hidden shadow-xl" id="inicio">
-      {/* Background Graphic Elements & Image Layer */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <img
-          src="/foto principal.png"
-          alt="Barrio Nuevo Achí Bolívar - Portada Principal"
-          className="w-full h-full object-cover object-center opacity-35"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#003366] via-[#003366]/90 to-[#002244]/85" />
-      </div>
-
-      {/* Flag Color Accent Ribbon on top (Colombia: Yellow, Blue, Red) */}
-      <div className="h-1.5 w-full flex">
-        <div className="h-full w-1/2 bg-[#FFD700]" />
-        <div className="h-full w-1/4 bg-[#003366]" />
-        <div className="h-full w-1/4 bg-[#CE1126]" />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 py-10 md:py-16 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          
-          {/* Left Column: Official Message & CTA */}
-          <div className="lg:col-span-7 space-y-5 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-xs font-semibold text-amber-300">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              SITIO WEB OFICIAL • GESTIÓN COMUNITARIA 2024 - 2028
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight font-['Montserrat',sans-serif] leading-tight">
-              JUNTA DE ACCIÓN COMUNAL <br />
-              <span className="text-amber-400">BARRIO NUEVO ACHÍ</span>
-            </h1>
-
-            <p className="text-lg sm:text-xl text-slate-200 font-medium max-w-2xl mx-auto lg:mx-0">
-              “Unidos construimos comunidad, participación y bienestar para todos.”
-            </p>
-
-            <p className="text-sm text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-              Representamos y gestionamos el desarrollo integral de las más de <strong className="text-white">706 familias</strong> de la Urbanización Nuevo Achí, impulsando el acceso a servicios públicos esenciales, gas natural, infraestructura social y la transición energética con <strong className="text-amber-300">Colombia Solar</strong>.
-            </p>
-
-            {/* Quick Action Buttons */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
-              <a
-                href="#beneficiarios"
-                onClick={onOpenRegister}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-lg font-bold text-sm bg-[#008000] text-white hover:bg-green-700 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all border border-green-300/40 cursor-pointer"
-              >
-                <UserPlus className="w-4 h-4 text-white" />
-                <span>Actualizar Registro de Afiliados</span>
-              </a>
-
-              <button
-                onClick={onOpenSolar}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-lg font-bold text-sm bg-amber-400 text-[#003366] hover:bg-amber-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
-              >
-                <SunMedium className="w-4 h-4 text-[#003366]" />
-                <span>Convocatoria Colombia Solar</span>
-              </button>
-
-              <a
-                href="#proyectos"
-                className="inline-flex items-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm bg-white/10 text-white hover:bg-white/20 hover:-translate-y-0.5 transition-all border border-white/20"
-              >
-                <FileText className="w-4 h-4 text-sky-300" />
-                <span>Plan de Acción</span>
-              </a>
-            </div>
-
-            {/* Location tag */}
-            <div className="flex items-center justify-center lg:justify-start gap-2 text-xs text-slate-300 pt-2">
-              <MapPin className="w-3.5 h-3.5 text-amber-400" />
-              <span>Achí, Bolívar • Depresión Momposina / La Mojana • Río Cauca</span>
-            </div>
-          </div>
-
-          {/* Right Column: Visual Composite Card & Community Highlights */}
-          <div className="lg:col-span-5">
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 shadow-2xl text-slate-100">
-              
-              {/* Emblem and Official Resolution Header */}
-              <div className="flex items-center gap-4 pb-4 border-b border-white/15">
-                <img
-                  src="/nuevo simple.png"
-                  onError={(e) => {
-                    const target = e.currentTarget;
-                    if (target.src !== '/logo_jac.svg') target.src = '/logo_jac.svg';
-                  }}
-                  alt="Emblema Oficial JAC Nuevo Achí"
-                  className="w-16 h-16 rounded-full bg-white p-1 border-2 border-amber-400 shadow-md flex-shrink-0 object-contain"
-                />
-                <div>
-                  <h3 className="font-extrabold text-sm uppercase tracking-wide text-white">
-                    Organismo Comunal Reconocido
-                  </h3>
-                  <p className="text-xs text-amber-300 font-medium">
-                    Personería Jurídica Res. 768 / 2023 & 410 / 2024
-                  </p>
-                  <p className="text-[11px] text-slate-300">
-                    Alcaldía Municipal de Achí • Secretaría de Gobierno
-                  </p>
-                </div>
-              </div>
-
-              {/* Photo preview of the community / Barrio Nuevo Achí */}
-              <div className="mt-3.5 rounded-xl overflow-hidden border border-white/20 relative shadow-inner">
-                <img
-                  src="/foto principal.png"
-                  alt="Vista del Barrio Nuevo Achí"
-                  className="w-full h-36 object-cover object-center hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-2.5 flex items-center justify-between text-[11px]">
-                  <span className="text-white font-semibold flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
-                    Urbanización Barrio Nuevo Achí
-                  </span>
-                  <span className="text-amber-300 font-medium">Achí, Bolívar</span>
-                </div>
-              </div>
-
-              {/* Key Indicators Grid */}
-              <div className="grid grid-cols-2 gap-3 my-4">
-                <div className="bg-white/10 rounded-xl p-3 border border-white/10">
-                  <span className="text-2xl font-black text-amber-400 font-['Montserrat',sans-serif]">
-                    706+
-                  </span>
-                  <p className="text-xs font-medium text-slate-200 mt-0.5">
-                    Familias en el censo territorial
-                  </p>
-                </div>
-
-                <div className="bg-white/10 rounded-xl p-3 border border-white/10">
-                  <span className="text-2xl font-black text-emerald-400 font-['Montserrat',sans-serif]">
-                    98
-                  </span>
-                  <p className="text-xs font-medium text-slate-200 mt-0.5">
-                    Afiliados activos en Libro Oficial
-                  </p>
-                </div>
-
-                <div className="bg-white/10 rounded-xl p-3 border border-white/10">
-                  <span className="text-2xl font-black text-sky-400 font-['Montserrat',sans-serif]">
-                    100%
-                  </span>
-                  <p className="text-xs font-medium text-slate-200 mt-0.5">
-                    Meta de cobertura acueducto y gas
-                  </p>
-                </div>
-
-                <div className="bg-white/10 rounded-xl p-3 border border-white/10">
-                  <span className="text-2xl font-black text-amber-300 font-['Montserrat',sans-serif]">
-                    70%
-                  </span>
-                  <p className="text-xs font-medium text-slate-200 mt-0.5">
-                    Meta de energía solar fotovoltaica
-                  </p>
-                </div>
-              </div>
-
-              {/* Differential Focus Note */}
-              <div className="bg-amber-400/15 border-l-4 border-amber-400 p-3 rounded-r-lg text-xs leading-relaxed text-amber-100">
-                <strong className="text-amber-300 font-bold block mb-1">
-                  Enfoque Diferencial Ley 1448 de 2011:
-                </strong>
-                Población sujeta de especial protección constitucional y víctimas del conflicto armado con derecho prioritario a vivienda digna y servicios esenciales.
-              </div>
-
-              <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-slate-300">
-                <span>RUT: <strong className="text-white font-mono">{INSTITUTIONAL_INFO.nit}</strong></span>
-                <span>RUC: <strong className="text-white font-mono">{INSTITUTIONAL_INFO.ruc}</strong></span>
-              </div>
-            </div>
-          </div>
-
+    <div className="w-full bg-[#111113] text-[#f8f7f4]" id="inicio">
+      
+      {/* 1. Header Section in Variation 3 style */}
+      <div className="p-6 sm:p-10 md:p-12 border-b border-[#f8f7f4]/10 bg-gradient-to-r from-black/80 via-[#18181a]/50 to-transparent relative overflow-hidden">
+        
+        {/* Subtle background photo overlay */}
+        <div className="absolute inset-0 pointer-events-none opacity-20">
+          <img
+            src="/foto principal.png"
+            alt="Barrio Nuevo Achí"
+            className="w-full h-full object-cover object-center filter grayscale mix-blend-screen"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#111113] via-[#111113]/85 to-transparent" />
         </div>
 
-        {/* Strategic 5 Pillars Strip */}
-        <div className="mt-10 pt-6 border-t border-white/15">
-          <p className="text-xs uppercase tracking-widest text-center text-amber-300/90 font-bold mb-4 font-['Montserrat',sans-serif]">
-            Pilares Estratégicos de Nuestra Gestión Comunal
+        <div className="relative z-10 max-w-5xl">
+          {/* Top Metadata Tag */}
+          <div className="font-geist-mono text-[11px] uppercase tracking-[0.25em] text-[#FFD700] mb-3 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#008000] inline-block animate-pulse"></span>
+            <span>REPÚBLICA DE COLOMBIA / DPTO BOLÍVAR / MUNICIPIO DE ACHÍ</span>
+          </div>
+
+          {/* Display Headline */}
+          <h1 className="font-oswald text-4xl sm:text-5xl md:text-6xl font-bold uppercase tracking-tight text-[#f8f7f4] leading-[0.95] mb-4">
+            JAC BARRIO <span className="text-[#FFD700]">NUEVO ACHÍ</span>
+          </h1>
+
+          <p className="text-sm sm:text-base text-[#f8f7f4]/75 max-w-3xl leading-relaxed mb-6 font-inter font-normal">
+            Plataforma de gestión territorial y comunitaria. Representación formal ante la Alcaldía de Achí para el desarrollo integral de las <strong className="text-white">706 familias</strong> residentes, impulsando el acceso a servicios públicos esenciales, gas natural, infraestructura social y la transición energética con <strong className="text-[#FFD700]">Colombia Solar</strong>.
           </p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-            {pillars.map((pillar, idx) => {
-              const Icon = pillar.icon;
-              return (
-                <div
-                  key={idx}
-                  className="bg-white/10 hover:bg-white/15 border border-white/10 rounded-xl p-3 flex items-center gap-2.5 transition-all text-left"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-[#008000]/80 flex items-center justify-center text-white flex-shrink-0">
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <span className="text-xs font-semibold text-white leading-tight">
-                    {pillar.label}
-                  </span>
-                </div>
-              );
-            })}
+
+          {/* Action Buttons in Variation 3 brutalist style */}
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={onOpenSolar}
+              className="bg-[#FFD700] hover:bg-white text-black px-5 py-3 font-oswald font-bold text-xs uppercase tracking-wider transition-all transform active:scale-95 shadow-md flex items-center gap-2 cursor-pointer"
+            >
+              <SunMedium className="w-4 h-4 text-black" />
+              <span>COLOMBIA SOLAR</span>
+            </button>
+
+            <button
+              onClick={() => onOpenDoc('informe-tecnico')}
+              className="bg-transparent hover:bg-white/10 text-white border border-[#f8f7f4]/30 px-5 py-3 font-oswald font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer"
+            >
+              <FileText className="w-4 h-4 text-[#FFD700]" />
+              <span>INFORME TÉCNICO 2026</span>
+            </button>
+
+            <button
+              onClick={onOpenRegister}
+              className="bg-[#008000] hover:bg-green-600 text-white px-5 py-3 font-oswald font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center gap-2 cursor-pointer"
+            >
+              <UserPlus className="w-4 h-4" />
+              <span>ACTUALIZAR REGISTRO</span>
+            </button>
           </div>
         </div>
 
       </div>
 
-      {/* Slogan Banner Bottom Bar */}
-      <div className="bg-[#002244] py-3 px-4 border-t border-white/10 text-center">
-        <p className="text-xs sm:text-sm text-slate-300 font-medium flex items-center justify-center gap-2 flex-wrap">
-          <span className="text-amber-400">☀️</span>
-          <span>Trabajamos por un Achí más unido, solidario y próspero</span>
-          <span className="hidden sm:inline">•</span>
-          <span className="text-emerald-400">Achí, Bolívar: Nuestra tierra, nuestro orgullo</span>
-        </p>
+      {/* 2. Variation 3 Data Grid (Exact 6-cell layout) */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-px bg-[#f8f7f4]/10 border-b border-[#f8f7f4]/10">
+        
+        <div className="bg-[#111113] p-4 sm:p-5">
+          <div className="font-geist-mono text-[10px] text-[#f8f7f4]/50 uppercase tracking-wider mb-1">
+            Afiliados Activos
+          </div>
+          <div className="font-oswald text-2xl font-bold text-[#f8f7f4]">
+            98 MIEMBROS
+          </div>
+          <div className="text-[10px] text-[#008000] font-geist-mono mt-0.5">
+            Libro Oficial Res. 768
+          </div>
+        </div>
+
+        <div className="bg-[#111113] p-4 sm:p-5">
+          <div className="font-geist-mono text-[10px] text-[#f8f7f4]/50 uppercase tracking-wider mb-1">
+            RUT / NIT
+          </div>
+          <div className="font-oswald text-2xl font-bold text-[#FFD700]">
+            901784749-1
+          </div>
+          <div className="text-[10px] text-[#f8f7f4]/50 font-geist-mono mt-0.5">
+            RUC: 5-5009-43192
+          </div>
+        </div>
+
+        <div className="bg-[#111113] p-4 sm:p-5">
+          <div className="font-geist-mono text-[10px] text-[#f8f7f4]/50 uppercase tracking-wider mb-1">
+            Jurisdicción
+          </div>
+          <div className="font-oswald text-2xl font-bold text-[#f8f7f4]">
+            LA MOJANA
+          </div>
+          <div className="text-[10px] text-[#f8f7f4]/50 font-geist-mono mt-0.5">
+            Margen Río Cauca
+          </div>
+        </div>
+
+        <div className="bg-[#111113] p-4 sm:p-5">
+          <div className="font-geist-mono text-[10px] text-[#f8f7f4]/50 uppercase tracking-wider mb-1">
+            Presidente
+          </div>
+          <div className="font-oswald text-xl sm:text-2xl font-bold text-[#f8f7f4] truncate" title="Jorge Caballero">
+            JORGE CABALLERO
+          </div>
+          <div className="text-[10px] text-[#f8f7f4]/50 font-geist-mono mt-0.5">
+            Rep. Legal Principal
+          </div>
+        </div>
+
+        <div className="bg-[#111113] p-4 sm:p-5">
+          <div className="font-geist-mono text-[10px] text-[#f8f7f4]/50 uppercase tracking-wider mb-1">
+            Personería
+          </div>
+          <div className="font-oswald text-2xl font-bold text-[#008000]">
+            RES. 410 / 2024
+          </div>
+          <div className="text-[10px] text-[#f8f7f4]/50 font-geist-mono mt-0.5">
+            Sec. de Gobierno Achí
+          </div>
+        </div>
+
+        <div className="bg-[#111113] p-4 sm:p-5">
+          <div className="font-geist-mono text-[10px] text-[#f8f7f4]/50 uppercase tracking-wider mb-1">
+            Cobertura Plan
+          </div>
+          <div className="font-oswald text-2xl font-bold text-[#FFD700]">
+            706 HOGARES
+          </div>
+          <div className="text-[10px] text-[#008000] font-geist-mono mt-0.5">
+            Urbanización Nuevo Achí
+          </div>
+        </div>
+
       </div>
+
+      {/* 3. Community Visual Feature Strip (Barrio Photo + Emblem Spotlight) */}
+      <div className="p-6 sm:p-8 bg-[#18181a]/60 border-b border-[#f8f7f4]/10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          
+          {/* Photo Showcase */}
+          <div className="lg:col-span-8 relative rounded-xl overflow-hidden border border-[#f8f7f4]/15 group">
+            <img
+              src="/foto principal.png"
+              alt="Urbanización Barrio Nuevo Achí"
+              className="w-full h-64 sm:h-72 object-cover object-center group-hover:scale-105 transition-transform duration-700"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent p-5 flex flex-col justify-end">
+              <div className="font-geist-mono text-[11px] text-[#FFD700] uppercase tracking-wider mb-1">
+                Vivienda Digna y Segura • Terreno No Inundable
+              </div>
+              <h3 className="font-oswald text-2xl font-bold text-white uppercase">
+                Urbanización Barrio Nuevo Achí (Bolívar)
+              </h3>
+              <p className="text-xs text-white/80 max-w-xl mt-1">
+                Más de 500 viviendas entregadas por el Fondo Adaptación a familias reasentadas con enfoque diferencial en el marco de la Ley 1448 de 2011.
+              </p>
+            </div>
+          </div>
+
+          {/* Emblem & Social Sidebar Spotlight */}
+          <div className="lg:col-span-4 bg-[#18181a] p-5 rounded-xl border border-[#f8f7f4]/10 space-y-4">
+            <div className="flex items-center gap-3 pb-3 border-b border-[#f8f7f4]/10">
+              <img
+                src="/nuevo simple.png"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (target.src !== '/logo_jac.svg') target.src = '/logo_jac.svg';
+                }}
+                alt="Emblema JAC"
+                className="w-14 h-14 rounded-full bg-white p-1 border-2 border-[#FFD700] object-contain flex-shrink-0"
+              />
+              <div>
+                <span className="font-geist-mono text-[10px] text-[#FFD700] block uppercase tracking-wider">
+                  Organismo Oficial
+                </span>
+                <h4 className="font-oswald text-base uppercase font-bold text-white leading-tight">
+                  JAC Barrio Nuevo Achí
+                </h4>
+                <p className="text-[11px] text-[#f8f7f4]/60">
+                  Personería Jurídica Reconocida
+                </p>
+              </div>
+            </div>
+
+            {/* Official Instagram Box */}
+            <div className="p-3.5 rounded-lg bg-gradient-to-r from-purple-950/40 via-pink-950/40 to-amber-950/30 border border-pink-500/20 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-yellow-500 via-pink-600 to-purple-700 flex items-center justify-center text-white">
+                  <Instagram className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-[10px] font-geist-mono uppercase text-[#f8f7f4]/60 block">
+                    Canal Oficial
+                  </span>
+                  <span className="font-oswald text-sm font-bold text-white tracking-wide">
+                    @jacnuevoachi
+                  </span>
+                </div>
+              </div>
+              <a
+                href={INSTITUTIONAL_INFO.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1.5 rounded bg-white text-black font-oswald text-xs font-bold uppercase hover:bg-[#FFD700] transition-colors"
+              >
+                Seguir
+              </a>
+            </div>
+
+            <div className="text-[11px] text-[#f8f7f4]/70 leading-relaxed font-inter">
+              Convocatorias a asambleas generales ordinarias y extraordinarias, mesas de trabajo y proyectos comunitarios de servicios públicos.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </div>
   );
 };

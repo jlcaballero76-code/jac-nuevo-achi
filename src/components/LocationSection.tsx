@@ -4,101 +4,87 @@ import { INSTITUTIONAL_INFO } from '../data/jacData';
 
 export const LocationSection: React.FC = () => {
   return (
-    <section id="mapa" className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200/80 scroll-mt-24">
+    <section id="mapa" className="p-6 sm:p-10 border-b border-[#f8f7f4]/10 bg-[#111113] scroll-mt-6">
       
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-[#003366] pb-4 mb-6">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-blue-50 text-[#003366] rounded-xl">
-            <MapPin className="w-6 h-6" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-[#f8f7f4]/10">
+        <div>
+          <div className="font-geist-mono text-[10px] uppercase tracking-widest text-[#FFD700]">
+            SECCIÓN 08 • JURISDICCIÓN & CARTOGRAFÍA
           </div>
-          <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-[#003366] font-['Montserrat',sans-serif]">
-              Ubicación Geográfica y Territorial
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-500">
-              Coordenadas de referencia en la Urbanización Barrio Nuevo Achí, Municipio de Achí (Bolívar)
-            </p>
-          </div>
+          <h2 className="font-oswald text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#f8f7f4]">
+            Ubicación Geográfica & Coordenadas
+          </h2>
+          <p className="text-xs text-[#f8f7f4]/60 mt-1 font-inter">
+            Coordenadas de referencia en la Urbanización Barrio Nuevo Achí, Municipio de Achí (Bolívar)
+          </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <a
-            href="https://maps.app.goo.gl/fMNhHfQRAFQwFL988"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#003366] text-white hover:bg-blue-900 transition-colors shadow-xs cursor-pointer"
-          >
-            <Navigation className="w-3.5 h-3.5" />
-            <span>Abrir en Google Maps</span>
-            <ExternalLink className="w-3 h-3 text-slate-300" />
-          </a>
-        </div>
+        <a
+          href="https://maps.app.goo.gl/fMNhHfQRAFQwFL988"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded bg-[#FFD700] hover:bg-white text-black font-oswald text-xs uppercase tracking-wider font-bold transition-colors cursor-pointer self-start sm:self-auto"
+        >
+          <Navigation className="w-4 h-4 text-black" />
+          <span>Abrir Google Maps</span>
+          <ExternalLink className="w-3 h-3 text-black/60" />
+        </a>
       </div>
 
       {/* Coordinate & Landmark Strip */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-5 text-xs">
-        <div className="bg-[#f8fafc] p-3.5 rounded-xl border border-slate-200 flex items-start gap-2.5">
-          <Compass className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6 text-xs">
+        <div className="bg-[#18181a] p-4 rounded-xl border border-[#f8f7f4]/10 flex items-start gap-3">
+          <Compass className="w-4 h-4 text-[#FFD700] flex-shrink-0 mt-0.5" />
           <div>
-            <strong className="text-slate-800 block">Coordenadas Exactas (Presidencia):</strong>
-            <span className="font-mono text-slate-600">
-              Latitud: {INSTITUTIONAL_INFO.coordinates.lat.toFixed(6)}, Longitud: {INSTITUTIONAL_INFO.coordinates.lng.toFixed(6)}
+            <strong className="text-white font-oswald uppercase tracking-wide block mb-1">
+              Coordenadas de Presidencia:
+            </strong>
+            <span className="font-geist-mono text-[#f8f7f4]/70 text-[11px]">
+              {INSTITUTIONAL_INFO.coordinates.lat.toFixed(6)}, {INSTITUTIONAL_INFO.coordinates.lng.toFixed(6)}
             </span>
           </div>
         </div>
 
-        <div className="bg-[#f8fafc] p-3.5 rounded-xl border border-slate-200 flex items-start gap-2.5">
-          <MapPin className="w-4 h-4 text-sky-600 flex-shrink-0 mt-0.5" />
+        <div className="bg-[#18181a] p-4 rounded-xl border border-[#f8f7f4]/10 flex items-start gap-3">
+          <MapPin className="w-4 h-4 text-[#008000] flex-shrink-0 mt-0.5" />
           <div>
-            <strong className="text-slate-800 block">Dirección Oficial en Barrio:</strong>
-            <span className="text-slate-600">
-              {INSTITUTIONAL_INFO.address}
+            <strong className="text-white font-oswald uppercase tracking-wide block mb-1">
+              Dirección Comunitaria:
+            </strong>
+            <span className="text-[#f8f7f4]/70 font-inter">
+              {INSTITUTIONAL_INFO.address}, Achí
             </span>
           </div>
         </div>
 
-        <div className="bg-[#f8fafc] p-3.5 rounded-xl border border-slate-200 flex items-start gap-2.5">
-          <ShieldCheck className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+        <div className="bg-[#18181a] p-4 rounded-xl border border-[#f8f7f4]/10 flex items-start gap-3">
+          <ShieldCheck className="w-4 h-4 text-sky-400 flex-shrink-0 mt-0.5" />
           <div>
-            <strong className="text-slate-800 block">Jurisdicción Territorial:</strong>
-            <span className="text-slate-600">
-              {INSTITUTIONAL_INFO.region}
+            <strong className="text-white font-oswald uppercase tracking-wide block mb-1">
+              Jurisdicción Territorial:
+            </strong>
+            <span className="text-[#f8f7f4]/70 font-inter">
+              Margen izquierda del Río Cauca • La Mojana
             </span>
           </div>
         </div>
       </div>
 
-      {/* Embedded Map Container */}
-      <div className="w-full h-80 sm:h-96 rounded-xl overflow-hidden border border-slate-300 shadow-inner relative mb-4">
+      {/* Map iframe */}
+      <div className="rounded-xl overflow-hidden border border-[#f8f7f4]/15 h-80 relative shadow-2xl">
         <iframe
-          src="https://maps.google.com/maps?q=8.574532616144996,-74.56004785583337&z=16&output=embed"
+          title="Mapa Satelital de Achí Bolívar"
           width="100%"
           height="100%"
-          style={{ border: 0 }}
-          allowFullScreen
+          style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) brightness(85%) contrast(120%)' }}
           loading="lazy"
-          title="Mapa de Ubicación JAC Barrio Nuevo Achí"
-          className="w-full h-full"
+          allowFullScreen
+          referrerPolicy="no-referrer-when-downgrade"
+          src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15732.903823485055!2d-74.5601264!3d8.5683935!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e5fbb4e81fa2c2f%3A0x6b77ecb476eb33c5!2sAch%C3%AD%2C%20Bol%C3%ADvar!5e0!3m2!1ses!2sco!4v1700000000000!5m2!1ses!2sco`}
         />
-      </div>
-
-      {/* Satellite Links and IGAC Map Reference */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 text-xs text-slate-600">
-        <p>
-          Referencia de acceso: Vía fluvial por el Río Cauca o conexión terrestre desde Magangué y Majagual.
-        </p>
-
-        <div className="flex items-center gap-2">
-          <a
-            href="https://www.colombiaenmapas.gov.co/?e=-74.57448499427548,8.569069194276546,-74.54517381415995,8.580038814005833,4686&b=igacsatelital&u=13006&t=29"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-300 font-semibold transition-colors"
-          >
-            <span>Ver en Colombia en Mapas (IGAC Satelital)</span>
-            <ExternalLink className="w-3 h-3" />
-          </a>
+        <div className="absolute bottom-3 left-3 bg-[#18181a]/90 backdrop-blur-md px-3 py-1.5 rounded border border-[#f8f7f4]/20 text-[11px] font-geist-mono text-[#FFD700]">
+          BARRIO NUEVO ACHÍ • DPTO BOLÍVAR
         </div>
       </div>
 

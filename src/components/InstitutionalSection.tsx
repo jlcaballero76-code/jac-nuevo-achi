@@ -1,5 +1,25 @@
 import React from 'react';
-import { Building2, FileCheck, Users, Phone, Mail, MapPin, Award, ShieldCheck, BookOpen, Clock, Briefcase, GraduationCap, HardHat, HeartPulse, Trophy, Sparkles, CheckCircle2 } from 'lucide-react';
+import { 
+  Building2, 
+  FileCheck, 
+  Users, 
+  Phone, 
+  Mail, 
+  MapPin, 
+  Award, 
+  ShieldCheck, 
+  BookOpen, 
+  Clock, 
+  Briefcase, 
+  GraduationCap, 
+  HardHat, 
+  HeartPulse, 
+  Trophy, 
+  Sparkles, 
+  CheckCircle2,
+  ExternalLink,
+  Instagram
+} from 'lucide-react';
 import { INSTITUTIONAL_INFO } from '../data/jacData';
 
 interface InstitutionalSectionProps {
@@ -19,177 +39,186 @@ export const InstitutionalSection: React.FC<InstitutionalSectionProps> = ({ onOp
   };
 
   return (
-    <section id="nosotros" className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200/80 scroll-mt-24">
+    <section id="nosotros" className="p-6 sm:p-10 border-b border-[#f8f7f4]/10 bg-[#111113] scroll-mt-6">
+      
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-emerald-600 pb-4 mb-8">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-[#f8f7f4]/10">
+        <div className="flex items-center gap-3.5">
           <img
             src="/nuevo simple.png"
             onError={(e) => {
               const target = e.currentTarget;
               if (target.src !== '/logo_jac.svg') target.src = '/logo_jac.svg';
             }}
-            alt="Logo JAC Barrio Nuevo Achí"
-            className="w-12 h-12 rounded-full p-0.5 bg-white border border-amber-400 shadow-sm object-contain flex-shrink-0"
+            alt="Logo JAC"
+            className="w-12 h-12 rounded-full p-1 bg-white border border-[#FFD700] object-contain flex-shrink-0"
           />
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-[#003366] font-['Montserrat',sans-serif]">
-              Información Institucional y Legal
+            <div className="font-geist-mono text-[10px] uppercase tracking-widest text-[#FFD700]">
+              SECCIÓN 02 • REGISTRO Y GOBIERNO
+            </div>
+            <h2 className="font-oswald text-2xl sm:text-3xl font-bold uppercase tracking-tight text-[#f8f7f4]">
+              Información Institucional & Legal
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500">
-              Constitución formal, personería jurídica y órganos directivos acreditados
-            </p>
           </div>
         </div>
+
         <div className="flex flex-wrap items-center gap-2">
           <a
             href={INSTITUTIONAL_INFO.instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-50 text-pink-700 text-xs font-semibold border border-pink-200 hover:bg-pink-100 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-white/5 hover:bg-white/10 text-pink-400 text-xs font-geist-mono border border-pink-500/30 transition-colors"
           >
-            <span>Instagram: @jacnuevoachi</span>
+            <Instagram className="w-3.5 h-3.5" />
+            <span>@jacnuevoachi</span>
           </a>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold border border-emerald-200">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#008000]/15 text-[#008000] text-xs font-geist-mono border border-[#008000]/30 font-bold">
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Entidad Comunal de Primer Grado</span>
+            <span>ENTIDAD COMUNAL DE 1ER GRADO</span>
           </div>
         </div>
       </div>
 
-      {/* 4 Cards Official Info Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+      {/* 4 Cards Grid - Variation 3 Industrial Panels */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         
-        {/* Card 1: Personería Jurídica */}
-        <div className="bg-[#f4f7f6] p-5 rounded-xl border-l-4 border-[#003366] hover:shadow-md transition-shadow">
-          <div className="flex items-center gap-2 mb-2 text-[#003366]">
-            <Award className="w-5 h-5 text-amber-500 flex-shrink-0" />
-            <h3 className="font-bold text-sm uppercase tracking-wide">Personería Jurídica</h3>
+        {/* Card 1: Personería */}
+        <div className="bg-[#18181a] p-5 rounded-xl border border-[#f8f7f4]/10 hover:border-[#FFD700]/50 transition-colors">
+          <div className="flex items-center gap-2 mb-3 text-[#FFD700]">
+            <Award className="w-4 h-4 flex-shrink-0" />
+            <h3 className="font-oswald font-bold text-sm uppercase tracking-wider text-white">
+              Personería Jurídica
+            </h3>
           </div>
-          <div className="text-xs space-y-1.5 text-slate-600">
-            <p><strong className="text-slate-800">Resolución Inicial:</strong> N° 768 del 05-Sept-2023</p>
-            <p><strong className="text-slate-800">Modificación Vigente:</strong> Res. N° 410 del 31-Jul-2024</p>
-            <p><strong className="text-slate-800">Entidad Emisora:</strong> Secretaría de Gobierno de Achí</p>
-            <p><strong className="text-slate-800">Marco Normativo:</strong> Ley 2166 de 2021</p>
-          </div>
-        </div>
-
-        {/* Card 2: Registros Oficiales */}
-        <div className="bg-[#f4f7f6] p-5 rounded-xl border-l-4 border-[#008000] hover:shadow-md transition-shadow">
-          <div className="flex items-center gap-2 mb-2 text-[#008000]">
-            <FileCheck className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-            <h3 className="font-bold text-sm uppercase tracking-wide">Registros Oficiales</h3>
-          </div>
-          <div className="text-xs space-y-1.5 text-slate-600">
-            <p><strong className="text-slate-800">RUT DIAN:</strong> <span className="font-mono font-bold text-slate-900">{INSTITUTIONAL_INFO.nit}</span></p>
-            <p><strong className="text-slate-800">RUC MinInterior:</strong> <span className="font-mono font-bold text-slate-900">{INSTITUTIONAL_INFO.ruc}</span></p>
-            <p><strong className="text-slate-800">Actividad DIAN:</strong> 9499 (Asociaciones)</p>
-            <p><strong className="text-slate-800">Afiliados Iniciales:</strong> {INSTITUTIONAL_INFO.registeredAffiliates} personas</p>
+          <div className="text-xs space-y-1.5 text-[#f8f7f4]/70 font-inter">
+            <p><strong className="text-white font-medium">Resolución Inicial:</strong> N° 768 (05-Sept-2023)</p>
+            <p><strong className="text-[#FFD700] font-medium">Modificación Vigente:</strong> Res. 410 (31-Jul-2024)</p>
+            <p><strong className="text-white font-medium">Emisor:</strong> Sec. de Gobierno de Achí</p>
+            <p><strong className="text-white font-medium">Marco:</strong> Ley 2166 de 2021</p>
           </div>
         </div>
 
-        {/* Card 3: Representación Legal */}
-        <div className="bg-[#f4f7f6] p-5 rounded-xl border-l-4 border-amber-500 hover:shadow-md transition-shadow">
-          <div className="flex items-center gap-2 mb-2 text-slate-800">
-            <Users className="w-5 h-5 text-amber-600 flex-shrink-0" />
-            <h3 className="font-bold text-sm uppercase tracking-wide">Representación Legal</h3>
+        {/* Card 2: Registros */}
+        <div className="bg-[#18181a] p-5 rounded-xl border border-[#f8f7f4]/10 hover:border-[#008000]/50 transition-colors">
+          <div className="flex items-center gap-2 mb-3 text-[#008000]">
+            <FileCheck className="w-4 h-4 flex-shrink-0" />
+            <h3 className="font-oswald font-bold text-sm uppercase tracking-wider text-white">
+              Registros Tributarios
+            </h3>
           </div>
-          <div className="text-xs space-y-1.5 text-slate-600">
-            <p>
-              <strong className="text-slate-800">Presidente:</strong><br />
-              <span className="font-semibold text-slate-900">Jorge Luis Caballero Dejanon</span><br />
-              <span className="text-[11px] text-slate-500">C.C. 9.292.195 de Turbaco</span>
-            </p>
-            <p className="pt-1 border-t border-slate-200">
-              <strong className="text-slate-800">Secretaria General:</strong><br />
-              <span className="font-semibold text-slate-900">Carolina Esther Galvis Muentes</span><br />
-              <span className="text-[11px] text-slate-500">C.C. 1.047.496.383 de Cartagena</span>
-            </p>
+          <div className="text-xs space-y-1.5 text-[#f8f7f4]/70 font-inter">
+            <p><strong className="text-white font-medium">RUT DIAN:</strong> <span className="font-geist-mono text-[#FFD700]">{INSTITUTIONAL_INFO.nit}</span></p>
+            <p><strong className="text-white font-medium">RUC MinInterior:</strong> <span className="font-geist-mono text-white">{INSTITUTIONAL_INFO.ruc}</span></p>
+            <p><strong className="text-white font-medium">Actividad:</strong> 9499 (Asociaciones)</p>
+            <p><strong className="text-white font-medium">Afiliados Iniciales:</strong> 98 ciudadanos</p>
           </div>
         </div>
 
-        {/* Card 4: Sede y Contacto */}
-        <div className="bg-[#f4f7f6] p-5 rounded-xl border-l-4 border-sky-600 hover:shadow-md transition-shadow">
-          <div className="flex items-center gap-2 mb-2 text-slate-800">
-            <MapPin className="w-5 h-5 text-sky-600 flex-shrink-0" />
-            <h3 className="font-bold text-sm uppercase tracking-wide">Contacto Directo</h3>
+        {/* Card 3: Representación */}
+        <div className="bg-[#18181a] p-5 rounded-xl border border-[#f8f7f4]/10 hover:border-[#FFD700]/50 transition-colors">
+          <div className="flex items-center gap-2 mb-3 text-[#FFD700]">
+            <Users className="w-4 h-4 flex-shrink-0" />
+            <h3 className="font-oswald font-bold text-sm uppercase tracking-wider text-white">
+              Representación Legal
+            </h3>
           </div>
-          <div className="text-xs space-y-1.5 text-slate-600">
-            <p>
-              <strong className="text-slate-800">Sede Comunal:</strong><br />
-              Manzana 01 Bloque 13 Casa 15 / Bloque 18 Casa 03
-            </p>
-            <p>
-              <strong className="text-slate-800">Teléfonos:</strong><br />
-              <a href="tel:3207645119" className="text-[#003366] font-bold hover:underline">{INSTITUTIONAL_INFO.phoneMain}</a> / {INSTITUTIONAL_INFO.phoneSecondary}
-            </p>
-            <p className="truncate">
-              <strong className="text-slate-800">Correo:</strong><br />
-              <a href={`mailto:${INSTITUTIONAL_INFO.email}`} className="text-[#003366] font-medium hover:underline">
-                {INSTITUTIONAL_INFO.email}
-              </a>
-            </p>
+          <div className="text-xs space-y-2 text-[#f8f7f4]/70 font-inter">
+            <div>
+              <span className="text-[10px] font-geist-mono text-[#FFD700] block uppercase">Presidente</span>
+              <strong className="text-white text-xs block">Jorge Luis Caballero Dejanon</strong>
+              <span className="font-geist-mono text-[11px] text-[#f8f7f4]/50">C.C. 9.292.195 de Turbaco</span>
+            </div>
+            <div className="pt-1.5 border-t border-white/5">
+              <span className="text-[10px] font-geist-mono text-[#008000] block uppercase">Secretaria General</span>
+              <strong className="text-white text-xs block">Carolina Esther Galvis Muentes</strong>
+              <span className="font-geist-mono text-[11px] text-[#f8f7f4]/50">C.C. 1.047.496.383 de Cartagena</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 4: Sede */}
+        <div className="bg-[#18181a] p-5 rounded-xl border border-[#f8f7f4]/10 hover:border-sky-500/50 transition-colors">
+          <div className="flex items-center gap-2 mb-3 text-sky-400">
+            <MapPin className="w-4 h-4 flex-shrink-0" />
+            <h3 className="font-oswald font-bold text-sm uppercase tracking-wider text-white">
+              Sede & Despacho
+            </h3>
+          </div>
+          <div className="text-xs space-y-1.5 text-[#f8f7f4]/70 font-inter">
+            <p><strong className="text-white font-medium">Ubicación:</strong> Mz 01 Bl 13 Ca 15 / Bl 18 Ca 03</p>
+            <p><strong className="text-white font-medium">Línea Directa:</strong> <a href="tel:3207645119" className="text-[#FFD700] font-mono hover:underline">{INSTITUTIONAL_INFO.phoneMain}</a></p>
+            <p className="truncate"><strong className="text-white font-medium">Correo:</strong> <a href={`mailto:${INSTITUTIONAL_INFO.email}`} className="text-white hover:underline">{INSTITUTIONAL_INFO.email}</a></p>
+            <p><strong className="text-white font-medium">Instagram:</strong> <a href={INSTITUTIONAL_INFO.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-pink-400 font-mono hover:underline">{INSTITUTIONAL_INFO.instagram}</a></p>
           </div>
         </div>
 
       </div>
 
-      {/* Dignatarios y Junta Directiva Completa */}
-      <div className="bg-slate-50 rounded-xl p-5 mb-10 border border-slate-200">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-[#003366] mb-3 flex items-center gap-2 font-['Montserrat',sans-serif]">
-          <Users className="w-4 h-4 text-emerald-600" />
+      {/* Dignatarios Registrados */}
+      <div className="bg-[#18181a] rounded-xl p-5 sm:p-6 mb-8 border border-[#f8f7f4]/10">
+        <div className="font-geist-mono text-[10px] text-[#FFD700] uppercase tracking-wider mb-1">
+          CUADRO DE MANDO COMUNAL
+        </div>
+        <h3 className="font-oswald text-lg font-bold uppercase tracking-wider text-white mb-4 flex items-center gap-2">
+          <Users className="w-4 h-4 text-[#008000]" />
           Dignatarios Registrados en Acta Oficial y Formulario DIAN 001
         </h3>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {INSTITUTIONAL_INFO.boardMembers.map((member, idx) => (
-            <div key={idx} className="bg-white p-3.5 rounded-lg border border-slate-200 text-xs shadow-2xs">
-              <span className="inline-block px-2 py-0.5 rounded bg-blue-50 text-[#003366] font-bold text-[10px] uppercase mb-1">
+            <div key={idx} className="bg-[#111113] p-4 rounded-lg border border-[#f8f7f4]/10 text-xs space-y-1">
+              <span className="inline-block px-2 py-0.5 rounded bg-[#FFD700]/10 text-[#FFD700] font-geist-mono text-[10px] uppercase font-bold">
                 {member.role}
               </span>
-              <h4 className="font-bold text-slate-900 text-sm leading-snug">{member.name}</h4>
-              <p className="text-slate-500 font-mono text-[11px] mt-0.5">{member.idDoc}</p>
-              <p className="text-emerald-700 text-[11px] font-medium mt-1 flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3 inline" />
-                {member.badge}
+              <h4 className="font-bold text-white text-sm leading-snug">{member.name}</h4>
+              <p className="text-[#f8f7f4]/50 font-geist-mono text-[11px]">{member.idDoc}</p>
+              <p className="text-[#008000] text-[11px] font-medium pt-1 flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>{member.badge}</span>
               </p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Las 6 Comisiones de Trabajo Estatutarias */}
+      {/* Las 6 Comisiones de Trabajo */}
       <div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
           <div>
-            <h3 className="text-base font-bold text-[#003366] font-['Montserrat',sans-serif]">
-              Comisiones de Trabajo Estatutarias (Art. 54 - Ley 2166 de 2021)
+            <div className="font-geist-mono text-[10px] text-[#008000] uppercase tracking-wider">
+              ART. 54 LEY 2166 DE 2021
+            </div>
+            <h3 className="font-oswald text-xl font-bold uppercase tracking-wider text-white">
+              Comisiones de Trabajo Estatutarias
             </h3>
-            <p className="text-xs text-slate-500">
-              Cada afiliado de la JAC debe inscribirse y participar activamente en al menos una comisión de trabajo
-            </p>
           </div>
           <button
             onClick={onOpenRegister}
-            className="self-start sm:self-auto text-xs font-bold text-[#008000] hover:text-green-800 hover:underline flex items-center gap-1 cursor-pointer"
+            className="text-xs font-oswald uppercase tracking-wider text-[#FFD700] hover:text-white flex items-center gap-1 cursor-pointer"
           >
             <span>Inscribirme en una comisión</span> &rarr;
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
           {INSTITUTIONAL_INFO.workingCommissions.map((comm, idx) => {
             const Icon = getCommissionIcon(comm.icon);
             return (
               <div
                 key={idx}
-                className="bg-white p-4 rounded-xl border border-slate-200 hover:border-[#003366] hover:shadow-md transition-all flex gap-3.5"
+                className="bg-[#18181a] p-4 rounded-xl border border-[#f8f7f4]/10 hover:border-[#FFD700] transition-colors flex gap-3.5"
               >
-                <div className="w-10 h-10 rounded-lg bg-blue-50 text-[#003366] flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-lg bg-[#FFD700]/10 text-[#FFD700] flex items-center justify-center flex-shrink-0">
                   <Icon className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-slate-900">{comm.name}</h4>
-                  <p className="text-xs text-slate-600 mt-1 leading-relaxed">{comm.desc}</p>
+                  <h4 className="font-oswald font-bold text-sm uppercase tracking-wide text-white">
+                    {comm.name}
+                  </h4>
+                  <p className="text-xs text-[#f8f7f4]/60 mt-1 leading-relaxed font-inter">
+                    {comm.desc}
+                  </p>
                 </div>
               </div>
             );
@@ -197,25 +226,6 @@ export const InstitutionalSection: React.FC<InstitutionalSectionProps> = ({ onOp
         </div>
       </div>
 
-      {/* Attention Hours Bar */}
-      <div className="mt-8 pt-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
-        <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4 text-[#003366]" />
-          <span><strong>Horario de atención comunal:</strong> Sábados y Domingos de 9:00 AM a 1:00 PM (Art. 46 Estatutos)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <BookOpen className="w-4 h-4 text-emerald-600" />
-          <span>Libros oficiales registrados ante la entidad de inspección, control y vigilancia</span>
-        </div>
-      </div>
     </section>
   );
 };
-
-function CheckCircleIcon({ className = "w-3 h-3" }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-    </svg>
-  );
-}
