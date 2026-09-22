@@ -1,0 +1,6 @@
+{
+  "name": "JAC Barrio Nuevo Achí - Sitio Oficial",
+  "description": "Sitio web oficial de la Junta de Acción Comunal del Barrio Nuevo Achí (Achí, Bolívar). Información institucional, plan de acción cuatrienal, registro de afiliados y proyectos comunitarios.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
